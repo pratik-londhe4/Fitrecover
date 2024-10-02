@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
+import { Colors } from '../constants/Colors';
 
 const InfoCards: React.FC<{ onProceed: () => void }> = ({ onProceed }) => {
   const [currentStep, setCurrentStep] = useState(0);
@@ -56,7 +57,7 @@ const styles = StyleSheet.create({
   },
   card: {
     width: '80%',
-    backgroundColor: '#fff',
+    backgroundColor: Colors.light.background, // Use light background color
     borderRadius: 10,
     padding: 20,
     elevation: 10, // Android shadow
@@ -78,7 +79,7 @@ const styles = StyleSheet.create({
   },
   nextButton: {
     padding: 15,
-    backgroundColor: '#007BFF',
+    backgroundColor: Colors.light.tint, // Use the constant color for the button
     borderRadius: 5,
     marginTop: 20,
   },
