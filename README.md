@@ -58,23 +58,6 @@ Use the Expo Go app on your mobile device or an emulator to scan the QR code dis
 
 ## Screenshots
 
-<div style="display: flex; flex-wrap: wrap; justify-content: space-between;">
-
-  <div style="flex: 0 0 48%; margin-bottom: 10px;">
-    <img src="./assets/screenshots/screenshot1.jpg" alt="Screenshot1" style="width: 100%; height: auto;" />
-  </div>
-  
-  <div style="flex: 0 0 48%; margin-bottom: 10px;">
-    <img src="./assets/screenshots/screenshot2.jpg" alt="Screenshot2" style="width: 100%; height: auto;" />
-  </div>
-
-  <div style="flex: 0 0 48%; margin-bottom: 10px;">
-    <img src="./assets/screenshots/screenshot3.jpg" alt="Screenshot3" style="width: 100%; height: auto;" />
-  </div>
-
-  <div style="flex: 0 0 48%; margin-bottom: 10px;">
-    <img src="./assets/screenshots/screenshot4.jpg" alt="Screenshot4" style="width: 100%; height: auto;" />
-  </div>
-
-</div>
-
+| ![Screenshot1](./assets/screenshots/screenshot1.jpg) | ![Screenshot2](./assets/screenshots/screenshot2.jpg) |
+| :-----------------------------------------------------: | :-----------------------------------------------------: |
+| ![Screenshot3](./assets/screenshots/screenshot3.jpg) | ![Screenshot4](./assets/screenshots/screenshot4.jpg) |
