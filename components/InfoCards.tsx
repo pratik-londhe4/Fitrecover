@@ -28,25 +28,42 @@ const InfoCards: React.FC<{ onProceed: () => void }> = ({ onProceed }) => {
   };
 
   return (
-    <View style={styles.container}>
-      <Text style={styles.title}>{steps[currentStep].title}</Text>
-      <Text style={styles.card}>{steps[currentStep].content}</Text>
-      <TouchableOpacity style={styles.nextButton} onPress={handleNext}>
-        <Text style={styles.nextButtonText}>
-          {currentStep < steps.length - 1 ? 'Next' : 'OK'}
-        </Text>
-      </TouchableOpacity>
+    <View style={styles.modalContainer}>
+      <View style={styles.card}>
+        <Text style={styles.title}>{steps[currentStep].title}</Text>
+        <Text style={styles.cardContent}>{steps[currentStep].content}</Text>
+        <TouchableOpacity style={styles.nextButton} onPress={handleNext}>
+          <Text style={styles.nextButtonText}>
+            {currentStep < steps.length - 1 ? 'Next' : 'OK'}
+          </Text>
+        </TouchableOpacity>
+      </View>
     </View>
   );
 };
 
 const styles = StyleSheet.create({
-  container: {
+  modalContainer: {
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
+    backgroundColor: 'rgba(0, 0, 0, 0.1)', // Semi-transparent background
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    right: 0,
+    bottom: 0,
+  },
+  card: {
+    width: '80%',
+    backgroundColor: '#fff',
+    borderRadius: 10,
     padding: 20,
-    backgroundColor: '#f5f5f5',
+    elevation: 10, // Android shadow
+    shadowColor: '#000', // iOS shadow
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.3,
+    shadowRadius: 4,
   },
   title: {
     fontSize: 28,
@@ -54,7 +71,7 @@ const styles = StyleSheet.create({
     marginBottom: 20,
     textAlign: 'center',
   },
-  card: {
+  cardContent: {
     fontSize: 18,
     marginBottom: 15,
     textAlign: 'center',
