@@ -101,7 +101,7 @@ const InhaleExhale: React.FC<{ onComplete: (exhalationDuration: number | null) =
       ) : null}
       {exhaleActive ?  (
         <TouchableOpacity style={styles.startButton} onPress={handleExhaleEnd}>
-          <Text style={styles.startButtonText}>STOP</Text>
+          <Text style={styles.startButtonText}>Click here when you can not exhale anymore</Text>
         </TouchableOpacity>
       ) : null}
     </View>

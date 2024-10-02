@@ -1,13 +1,15 @@
 import React, { useState, useEffect } from 'react';
 import { View, Text, TouchableOpacity, StyleSheet, Image } from 'react-native';
 import InhaleExhale from '../../components/InhaleExhale'; // Import the new component
-import SiteLogo from '../../components/SiteLogo'
+import SiteLogo from '../../components/SiteLogo'; // Import SiteLogo
+import InfoCards from '../../components/InfoCards'; // Import the InfoCards component
 
 const App: React.FC = () => {
   const [countdown, setCountdown] = useState<number | null>(null);
   const [isInhaleExhale, setIsInhaleExhale] = useState(false);
   const [exhalationDuration, setExhalationDuration] = useState<number | null>(null);
   const [feedback, setFeedback] = useState<string | null>(null); // New state for feedback
+  const [showInfoCards, setShowInfoCards] = useState(true); // State to track if info cards should be shown
 
   const handleStart = () => {
     setCountdown(3);
@@ -49,11 +51,17 @@ const App: React.FC = () => {
     }
   };
 
+  const handleProceed = () => {
+    setShowInfoCards(false); // Hide info cards and show the countdown
+  };
+
   return (
     <View style={styles.container}>
-		  <SiteLogo />
+      <SiteLogo />
       <Text style={styles.title}>FitRecover</Text>
-      {isInhaleExhale ? (
+      {showInfoCards ? (
+        <InfoCards onProceed={handleProceed} /> // Render info cards
+      ) : isInhaleExhale ? (
         <InhaleExhale onComplete={handleComplete} /> 
       ) : countdown !== null ? (
         <Text style={styles.countdownText}>{countdown}</Text>
@@ -73,8 +81,7 @@ const styles = StyleSheet.create({
     justifyContent: 'flex-start',
     alignItems: 'center',
     backgroundColor: '#f5f5f5',
-	paddingTop: 100,
-	
+    paddingTop: 100,
   },
   logo: {
     width: 100,
