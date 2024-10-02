@@ -94,16 +94,16 @@ const InhaleExhale: React.FC<{ onComplete: (exhalationDuration: number | null) =
       <Text style={styles.instructionText}>
         {isFifthCycle ? (exhaleActive ? 'Exhale as slow as possible...' : 'Inhale as full as possible...') : (isInhaling ? 'Inhale...' : 'Exhale...')}
       </Text>
-      {isFifthCycle && !exhaleActive && (
+      {(isFifthCycle && !exhaleActive) ? (
         <TouchableOpacity style={styles.startButton} onPress={handleExhaleStart}>
           <Text style={styles.startButtonText}>Tap to start Exhaling</Text>
         </TouchableOpacity>
-      )}
-      {exhaleActive && (
+      ) : null}
+      {exhaleActive ?  (
         <TouchableOpacity style={styles.startButton} onPress={handleExhaleEnd}>
           <Text style={styles.startButtonText}>STOP</Text>
         </TouchableOpacity>
-      )}
+      ) : null}
     </View>
   );
 };
