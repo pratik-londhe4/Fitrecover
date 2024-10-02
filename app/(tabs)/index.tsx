@@ -1,8 +1,9 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, TouchableOpacity, StyleSheet, Image } from 'react-native';
+import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
 import InhaleExhale from '../../components/InhaleExhale'; // Import the new component
 import SiteLogo from '../../components/SiteLogo'; // Import SiteLogo
 import InfoCards from '../../components/InfoCards'; // Import the InfoCards component
+import { Colors } from '../../constants/Colors'; // Import your Colors
 
 const App: React.FC = () => {
   const [countdown, setCountdown] = useState<number | null>(null);
@@ -59,17 +60,20 @@ const App: React.FC = () => {
     <View style={styles.container}>
       <SiteLogo />
       <Text style={styles.title}>FitRecover</Text>
-      {showInfoCards ? (
-        <InfoCards onProceed={handleProceed} /> // Render info cards
-      ) : isInhaleExhale ? (
-        <InhaleExhale onComplete={handleComplete} /> 
-      ) : countdown !== null ? (
-        <Text style={styles.countdownText}>{countdown}</Text>
-      ) : (
-        <TouchableOpacity style={styles.startButton} onPress={handleStart}>
-          <Text style={styles.startButtonText}>Tap Here to Start</Text>
-        </TouchableOpacity>
-      )}
+      <Text style={styles.tagline}>Measure your CO₂ tolerance for optimal recovery</Text>
+      <View style={styles.centeredContent}>
+        {showInfoCards ? (
+          <InfoCards onProceed={handleProceed} />
+        ) : isInhaleExhale ? (
+          <InhaleExhale onComplete={handleComplete} />
+        ) : countdown !== null ? (
+          <Text style={styles.countdownText}>{countdown}</Text>
+        ) : (
+          <TouchableOpacity style={styles.startButton} onPress={handleStart}>
+            <Text style={styles.startButtonText}>Tap Here to Start</Text>
+          </TouchableOpacity>
+        )}
+      </View>
       {feedback ? <Text style={styles.feedbackText}>{feedback}</Text> : null}
     </View>
   );
@@ -80,37 +84,54 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'flex-start',
     alignItems: 'center',
-    backgroundColor: '#f5f5f5',
+    backgroundColor: Colors.light.background, // Use background color from the theme
     paddingTop: 100,
-  },
-  logo: {
-    width: 100,
-    height: 100,
-    marginBottom: 5,
+    paddingHorizontal: 20, // Add some horizontal padding
   },
   title: {
-    fontSize: 24,
+    fontSize: 28,
     fontWeight: 'bold',
+    marginBottom: 5,
+    color: Colors.light.text, // Use text color from the theme
+  },
+  tagline: {
+    fontSize: 16,
+    color: '#555',
     marginBottom: 30,
+    textAlign: 'center',
+  },
+  centeredContent: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    width: '100%', // Ensure centered content takes full width
   },
   startButton: {
     padding: 15,
-    backgroundColor: '#007BFF',
-    borderRadius: 5,
+    backgroundColor: Colors.light.tint, // Use the tint color for the button
+    borderRadius: 10, // Rounded corners
+    shadowColor: '#000', // Shadow for depth
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.3,
+    shadowRadius: 4,
+    elevation: 5, // Android shadow
   },
   startButtonText: {
     color: '#ffffff',
     fontSize: 18,
+    textAlign: 'center', // Centered text
   },
   countdownText: {
     fontSize: 48,
     fontWeight: 'bold',
     marginBottom: 30,
+    color: Colors.light.text, // Use text color from the theme
   },
   feedbackText: {
     fontSize: 18,
     marginTop: 20,
     textAlign: 'center',
+    color: Colors.light.text, // Use text color from the theme
   },
 });
 
