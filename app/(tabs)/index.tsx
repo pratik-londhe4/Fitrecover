@@ -1,19 +1,21 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
-import InhaleExhale from '../../components/InhaleExhale'; // Import the new component
-import SiteLogo from '../../components/SiteLogo'; // Import SiteLogo
-import InfoCards from '../../components/InfoCards'; // Import the InfoCards component
-import { Colors } from '../../constants/Colors'; // Import your Colors
+import { View, Text, TouchableOpacity, StyleSheet, Animated } from 'react-native';
+import InhaleExhale from '../../components/InhaleExhale';
+import SiteLogo from '../../components/SiteLogo';
+import InfoCards from '../../components/InfoCards';
+import { Colors } from '../../constants/Colors';
 
 const App: React.FC = () => {
   const [countdown, setCountdown] = useState<number | null>(null);
   const [isInhaleExhale, setIsInhaleExhale] = useState(false);
   const [exhalationDuration, setExhalationDuration] = useState<number | null>(null);
-  const [feedback, setFeedback] = useState<string | null>(null); // New state for feedback
-  const [showInfoCards, setShowInfoCards] = useState(true); // State to track if info cards should be shown
+  const [feedback, setFeedback] = useState<{ message: string; status: string } | null>(null);
+  const [showInfoCards, setShowInfoCards] = useState(true);
+  const [fadeAnim] = useState(new Animated.Value(0)); // Animation state
 
   const handleStart = () => {
     setCountdown(3);
+    setFeedback(null);
   };
 
   useEffect(() => {
@@ -25,7 +27,7 @@ const App: React.FC = () => {
       }, 1000);
     } else if (countdown === 0) {
       setCountdown(null);
-      setIsInhaleExhale(true); // Start inhale/exhale sequence
+      setIsInhaleExhale(true);
     }
 
     return () => clearTimeout(timer);
@@ -33,27 +35,42 @@ const App: React.FC = () => {
 
   const handleComplete = (duration: number | null) => {
     setIsInhaleExhale(false);
-    setExhalationDuration(duration); // Save the duration for feedback
-    // Calculate recovery feedback based on exhalation duration
+    setExhalationDuration(duration);
+
     if (duration !== null) {
       let feedbackMessage: string;
+      let status: string;
       if (duration < 30) {
-        feedbackMessage = 'No Recovery';
+        feedbackMessage = 'Not Fully Recovered';
+        status = Colors.light.tabIconDefault; // Soft gray instead of red
       } else if (duration >= 30 && duration < 60) {
-        feedbackMessage = 'Recovered ~80-90%';
-      } else if (duration >= 60) {
-        feedbackMessage = 'Full Recovery 100%';
+        feedbackMessage = 'Recovered Adequately';
+        status = '#60a662'; 
       } else {
-        feedbackMessage = 'Duration out of range';
+        feedbackMessage = 'Full Recovery 100%';
+        status = Colors.light.tint; // Green
       }
-      setFeedback(`Exhalation Duration: ${duration.toFixed(2)} seconds. ${feedbackMessage}`);
+      setFeedback({
+        message: feedbackMessage,
+        status: status,
+      });
+      fadeIn(); // Trigger animation
     } else {
-      setFeedback('Inhale/Exhale sequence completed!');
+      setFeedback({ message: 'Inhale/Exhale sequence completed!', status: '#888' });
+      fadeIn();
     }
   };
 
+  const fadeIn = () => {
+    Animated.timing(fadeAnim, {
+      toValue: 1,
+      duration: 500,
+      useNativeDriver: true, // Use native driver for performance
+    }).start();
+  };
+
   const handleProceed = () => {
-    setShowInfoCards(false); // Hide info cards and show the countdown
+    setShowInfoCards(false);
   };
 
   return (
@@ -70,11 +87,18 @@ const App: React.FC = () => {
           <Text style={styles.countdownText}>{countdown}</Text>
         ) : (
           <TouchableOpacity style={styles.startButton} onPress={handleStart}>
-            <Text style={styles.startButtonText}>Tap Here to Start</Text>
+            <Text style={styles.startButtonText}>Tap here to Start</Text>
           </TouchableOpacity>
         )}
+        {feedback && (
+          <Animated.View style={[styles.feedbackCard, { backgroundColor: '#60a662', opacity: fadeAnim }]}>
+            <Text style={styles.exhalationText}>
+              CO2 Discard Rate: {exhalationDuration?.toFixed(2)} seconds
+            </Text>
+            <Text style={styles.feedbackText}>{feedback.message}</Text>
+          </Animated.View>
+        )}
       </View>
-      {feedback ? <Text style={styles.feedbackText}>{feedback}</Text> : null}
     </View>
   );
 };
@@ -84,15 +108,15 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'flex-start',
     alignItems: 'center',
-    backgroundColor: Colors.light.background, // Use background color from the theme
+    backgroundColor: Colors.light.background,
     paddingTop: 100,
-    paddingHorizontal: 20, // Add some horizontal padding
+    paddingHorizontal: 20,
   },
   title: {
     fontSize: 28,
     fontWeight: 'bold',
     marginBottom: 5,
-    color: Colors.light.text, // Use text color from the theme
+    color: Colors.light.text,
   },
   tagline: {
     fontSize: 16,
@@ -104,34 +128,49 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    width: '100%', // Ensure centered content takes full width
+    width: '100%',
   },
   startButton: {
     padding: 15,
-    backgroundColor: Colors.light.tint, // Use the tint color for the button
-    borderRadius: 10, // Rounded corners
-    shadowColor: '#000', // Shadow for depth
+    backgroundColor: Colors.light.tint,
+    borderRadius: 10,
+    shadowColor: '#000',
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.3,
     shadowRadius: 4,
-    elevation: 5, // Android shadow
+    elevation: 5,
   },
   startButtonText: {
     color: '#ffffff',
     fontSize: 18,
-    textAlign: 'center', // Centered text
+    textAlign: 'center',
   },
   countdownText: {
     fontSize: 48,
     fontWeight: 'bold',
     marginBottom: 30,
-    color: Colors.light.text, // Use text color from the theme
+    color: Colors.light.text,
+  },
+  feedbackCard: {
+    marginTop: 20,
+    padding: 20,
+    borderRadius: 10,
+    alignItems: 'center',
+    justifyContent: 'center',
+    width: '90%',
+    elevation: 3,
+  },
+  exhalationText: {
+    fontSize: 20,
+    fontWeight: 'bold',
+    color: '#ffffff',
+    textAlign: 'center',
+    marginBottom: 5,
   },
   feedbackText: {
     fontSize: 18,
-    marginTop: 20,
     textAlign: 'center',
-    color: Colors.light.text, // Use text color from the theme
+    color: '#ffffff',
   },
 });
 
