@@ -1,11 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import { View, Text, TouchableOpacity, StyleSheet, Image } from 'react-native';
+import InhaleExhale from '../../components/InhaleExhale'; // Import the new component
 
 const App: React.FC = () => {
   const [countdown, setCountdown] = useState<number | null>(null);
+  const [isInhaleExhale, setIsInhaleExhale] = useState(false);
 
   const handleStart = () => {
-    // Start the countdown from 3
     setCountdown(3);
   };
 
@@ -17,19 +18,27 @@ const App: React.FC = () => {
         setCountdown(prev => (prev !== null ? prev - 1 : null));
       }, 1000);
     } else if (countdown === 0) {
-      
       setCountdown(null);
-      
+      setIsInhaleExhale(true); // Start inhale/exhale sequence
     }
 
-    return () => clearTimeout(timer); // Cleanup the timer on component unmount
+    return () => clearTimeout(timer);
   }, [countdown]);
+
+  const handleComplete = () => {
+    // Handle the completion of the inhale/exhale animation
+    setIsInhaleExhale(false);
+    // Navigate to the next step or show recovery feedback
+    alert('Inhale/Exhale sequence completed!'); // Placeholder
+  };
 
   return (
     <View style={styles.container}>
-      <Image source={require('../../assets/images/icon.png')} style={styles.logo} /> {/* Replace with your logo */}
+      <Image source={require('../../assets/images/icon.png')} style={styles.logo} />
       <Text style={styles.title}>FitRecover</Text>
-      {countdown !== null ? (
+      {isInhaleExhale ? (
+        <InhaleExhale onComplete={handleComplete} /> // Render inhale/exhale component
+      ) : countdown !== null ? (
         <Text style={styles.countdownText}>{countdown}</Text>
       ) : (
         <TouchableOpacity style={styles.startButton} onPress={handleStart}>
@@ -45,11 +54,11 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: '#f5f5f5', // Light background color
+    backgroundColor: '#f5f5f5',
   },
   logo: {
-    width: 100,  // Adjust size as needed
-    height: 100, // Adjust size as needed
+    width: 100,
+    height: 100,
     marginBottom: 20,
   },
   title: {
@@ -59,7 +68,7 @@ const styles = StyleSheet.create({
   },
   startButton: {
     padding: 15,
-    backgroundColor: '#007BFF', // Button color
+    backgroundColor: '#007BFF',
     borderRadius: 5,
   },
   startButtonText: {
