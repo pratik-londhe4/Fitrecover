@@ -6,6 +6,7 @@ const App: React.FC = () => {
   const [countdown, setCountdown] = useState<number | null>(null);
   const [isInhaleExhale, setIsInhaleExhale] = useState(false);
   const [exhalationDuration, setExhalationDuration] = useState<number | null>(null);
+  const [feedback, setFeedback] = useState<string | null>(null); // New state for feedback
 
   const handleStart = () => {
     setCountdown(3);
@@ -31,19 +32,19 @@ const App: React.FC = () => {
     setExhalationDuration(duration); // Save the duration for feedback
     // Calculate recovery feedback based on exhalation duration
     if (duration !== null) {
-      let feedback: string;
-      if (duration < 30 ) {
-        feedback = 'No Recovery';
+      let feedbackMessage: string;
+      if (duration < 30) {
+        feedbackMessage = 'No Recovery';
       } else if (duration >= 30 && duration < 60) {
-        feedback = 'Recovered ~80-90%';
+        feedbackMessage = 'Recovered ~80-90%';
       } else if (duration >= 60) {
-        feedback = 'Full Recovery 100%';
+        feedbackMessage = 'Full Recovery 100%';
       } else {
-        feedback = 'Duration out of range';
+        feedbackMessage = 'Duration out of range';
       }
-      alert(`Exhalation Duration: ${duration.toFixed(2)} seconds. ${feedback}`);
+      setFeedback(`Exhalation Duration: ${duration.toFixed(2)} seconds. ${feedbackMessage}`);
     } else {
-      alert('Inhale/Exhale sequence completed!');
+      setFeedback('Inhale/Exhale sequence completed!');
     }
   };
 
@@ -60,6 +61,7 @@ const App: React.FC = () => {
           <Text style={styles.startButtonText}>Tap Here to Start</Text>
         </TouchableOpacity>
       )}
+      {feedback && <Text style={styles.feedbackText}>{feedback}</Text>} {/* Display feedback on screen */}
     </View>
   );
 };
@@ -94,6 +96,11 @@ const styles = StyleSheet.create({
     fontSize: 48,
     fontWeight: 'bold',
     marginBottom: 30,
+  },
+  feedbackText: {
+    fontSize: 18,
+    marginTop: 20,
+    textAlign: 'center',
   },
 });
 
