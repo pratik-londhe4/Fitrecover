@@ -67,7 +67,7 @@ const History = () => {
 
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>Exhale History</Text>
+      <Text style={styles.title}>FitRecover History</Text>
       {historyData.length === 0 ? (
         <Text style={styles.noDataText}>No exhale data available.</Text>
       ) : (

@@ -16,7 +16,7 @@ const InfoCards: React.FC<{ onProceed: () => void }> = ({ onProceed }) => {
     },
     {
       title: "Usage",
-      content: "Use this test to track your recovery the next day after workout",
+      content: "Use this test in the morning right after waking up",
     },
   ];
 
