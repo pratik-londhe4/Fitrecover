@@ -2,12 +2,10 @@ import React, { useState, useEffect } from 'react';
 import { View, Text, TouchableOpacity, StyleSheet, Image } from 'react-native';
 import InhaleExhale from '../../components/InhaleExhale'; // Import the new component
 
-
 const App: React.FC = () => {
   const [countdown, setCountdown] = useState<number | null>(null);
   const [isInhaleExhale, setIsInhaleExhale] = useState(false);
   const [exhalationDuration, setExhalationDuration] = useState<number | null>(null);
-
 
   const handleStart = () => {
     setCountdown(3);
@@ -28,21 +26,22 @@ const App: React.FC = () => {
     return () => clearTimeout(timer);
   }, [countdown]);
 
-  const handleComplete = () => {
-	setIsInhaleExhale(false);
+  const handleComplete = (duration: number | null) => {
+    setIsInhaleExhale(false);
+    setExhalationDuration(duration); // Save the duration for feedback
     // Calculate recovery feedback based on exhalation duration
-    if (exhalationDuration !== null) {
+    if (duration !== null) {
       let feedback: string;
-      if (exhalationDuration < 25) {
+      if (duration < 30 ) {
         feedback = 'No Recovery';
-      } else if (exhalationDuration >= 30 && exhalationDuration < 60) {
+      } else if (duration >= 30 && duration < 60) {
         feedback = 'Recovered ~80-90%';
-      } else if (exhalationDuration >= 65 && exhalationDuration <= 120) {
+      } else if (duration >= 60) {
         feedback = 'Full Recovery 100%';
       } else {
         feedback = 'Duration out of range';
       }
-      alert(`Exhalation Duration: ${exhalationDuration} seconds. ${feedback}`);
+      alert(`Exhalation Duration: ${duration.toFixed(2)} seconds. ${feedback}`);
     } else {
       alert('Inhale/Exhale sequence completed!');
     }

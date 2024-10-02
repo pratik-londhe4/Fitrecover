@@ -62,13 +62,21 @@ const InhaleExhale: React.FC<{ onComplete: (exhalationDuration: number | null) =
 
   const handleExhaleStart = () => {
     setExhalationStartTime(Date.now()); // Start timing for exhalation
-    setExhaleActive(true); // Set exhale to active
+	  setExhaleActive(true); // Set exhale to active
+	  Animated.timing(scaleValue, {
+		toValue: 0,
+		duration: 20000, // 5 seconds for exhale
+		useNativeDriver: true,
+	  }).start(() => {
+		setIsInhaling(false); // Prepare for next inhale
+		
+	  });
   };
 
   const handleExhaleEnd = () => {
     if (exhalationStartTime) {
-      const exhalationDuration = (Date.now() - exhalationStartTime) / 1000; // Calculate exhalation duration
-      onComplete(exhalationDuration); // Call the completion function with exhalation duration
+      const duration = (Date.now() - exhalationStartTime) / 1000; // Calculate exhalation duration
+      onComplete(duration); // Call the completion function with exhalation duration
     }
     setExhaleActive(false); // Reset exhaling state
   };
@@ -84,7 +92,7 @@ const InhaleExhale: React.FC<{ onComplete: (exhalationDuration: number | null) =
         ]}
       />
       <Text style={styles.instructionText}>
-        {isFifthCycle ? (exhaleActive ? 'Click here once you can no longer exhale...' : 'Inhale as full as possible...') : (isInhaling ? 'Inhale...' : 'Exhale...')}
+        {isFifthCycle ? (exhaleActive ? 'Exhale as slow as possible...' : 'Inhale as full as possible...') : (isInhaling ? 'Inhale...' : 'Exhale...')}
       </Text>
       {isFifthCycle && !exhaleActive && (
         <TouchableOpacity style={styles.startButton} onPress={handleExhaleStart}>
@@ -93,7 +101,7 @@ const InhaleExhale: React.FC<{ onComplete: (exhalationDuration: number | null) =
       )}
       {exhaleActive && (
         <TouchableOpacity style={styles.startButton} onPress={handleExhaleEnd}>
-          <Text style={styles.startButtonText}>Click here when you can’t exhale anymore</Text>
+          <Text style={styles.startButtonText}>STOP</Text>
         </TouchableOpacity>
       )}
     </View>
