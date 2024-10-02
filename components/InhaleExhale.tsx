@@ -3,7 +3,7 @@ import { View, Text, StyleSheet, Animated, TouchableOpacity } from 'react-native
 import { Colors } from '../constants/Colors'; 
 
 const InhaleExhale: React.FC<{ onComplete: (exhalationDuration: number | null) => void }> = ({ onComplete }) => {
-  const [sequenceCount, setSequenceCount] = useState(0); // Track the number of sequences completed
+  const [sequenceCount, setSequenceCount] = useState(1); // Track the number of sequences completed
   const [isInhaling, setIsInhaling] = useState(true);
   const [scaleValue] = useState(new Animated.Value(0));
   const [isFifthCycle, setIsFifthCycle] = useState(false);

@@ -36,3 +36,11 @@ export const getExhaleData = async () => {
     return {};
   }
 };
+
+export const clearExhaleData = async () => {
+	try {
+	  await AsyncStorage.removeItem('exhaleData'); // This removes the exhale data from storage
+	} catch (e) {
+	  console.error('Error clearing exhale data', e);
+	}
+  };
