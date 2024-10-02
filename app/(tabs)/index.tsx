@@ -4,6 +4,7 @@ import InhaleExhale from '../../components/InhaleExhale';
 import SiteLogo from '../../components/SiteLogo';
 import InfoCards from '../../components/InfoCards';
 import { Colors } from '../../constants/Colors';
+import { saveExhaleData } from '@/utils/ExhaleStorage';
 
 const App: React.FC = () => {
   const [countdown, setCountdown] = useState<number | null>(null);
@@ -33,7 +34,7 @@ const App: React.FC = () => {
     return () => clearTimeout(timer);
   }, [countdown]);
 
-  const handleComplete = (duration: number | null) => {
+  const handleComplete = async (duration: number | null) => {
     setIsInhaleExhale(false);
     setExhalationDuration(duration);
 
@@ -54,6 +55,8 @@ const App: React.FC = () => {
         message: feedbackMessage,
         status: status,
       });
+      
+      await saveExhaleData(duration); // Save the exhalation duration
       fadeIn(); // Trigger animation
     } else {
       setFeedback({ message: 'Inhale/Exhale sequence completed!', status: '#888' });
@@ -91,7 +94,7 @@ const App: React.FC = () => {
           </TouchableOpacity>
         )}
         {feedback && (
-          <Animated.View style={[styles.feedbackCard, { backgroundColor: '#60a662', opacity: fadeAnim }]}>
+          <Animated.View style={[styles.feedbackCard, { backgroundColor: feedback.status, opacity: fadeAnim }]}>
             <Text style={styles.exhalationText}>
               CO2 Discard Rate: {exhalationDuration?.toFixed(2)} seconds
             </Text>
