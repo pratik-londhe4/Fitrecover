@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { View, Text, FlatList, StyleSheet, Button, Alert } from 'react-native';
-import { Colors } from '@/constants/Colors'; // Adjust the path accordingly
-import { getExhaleData, clearExhaleData } from '../../utils/ExhaleStorage'; // Ensure this path is correct
+import { Colors } from '@/constants/Colors'; 
+import { getExhaleData, clearExhaleData } from '../../utils/ExhaleStorage';
 
 const History = () => {
   const [historyData, setHistoryData] = useState<{ date: string; dateTime: string; exhaleSeconds: number }[]>([]);
@@ -24,7 +24,7 @@ const History = () => {
 
       setHistoryData(formattedData);
     } catch (error) {
-      console.error('Error fetching exhale data:', error);
+      console.error('Error fetching data:', error);
     }
   };
 
@@ -32,7 +32,7 @@ const History = () => {
   const handleResetHistory = async () => {
     try {
       await clearExhaleData(); // Clear the stored data in AsyncStorage
-      Alert.alert('History Reset', 'All exhale history has been cleared.');
+      Alert.alert('History Reset', 'All test history has been cleared.');
       setHistoryData([]); // Clear the state to remove data from the UI
     } catch (error) {
       Alert.alert('Error', 'Unable to reset history. Please try again.');
@@ -69,13 +69,13 @@ const History = () => {
     <View style={styles.container}>
       <Text style={styles.title}>FitRecover History</Text>
       {historyData.length === 0 ? (
-        <Text style={styles.noDataText}>No exhale data available.</Text>
+        <Text style={styles.noDataText}>No data available.</Text>
       ) : (
         <FlatList
           data={historyData}
           keyExtractor={(item) => item.dateTime} // Use dateTime as the key
           renderItem={renderItem}
-          contentContainerStyle={styles.listContainer} // Apply padding to the list container
+          contentContainerStyle={styles.listContainer} 
         />
       )}
 
@@ -94,51 +94,51 @@ const styles = StyleSheet.create({
     flex: 1,
     padding: 20,
     marginTop: 64,
-    backgroundColor: Colors.light.background, // Adjust based on theme
+    backgroundColor: Colors.light.background, 
   },
   title: {
     fontSize: 24,
     fontWeight: 'bold',
     marginBottom: 20,
     color: Colors.light.text,
-    textAlign: 'center', // Center align the title
+    textAlign: 'center', 
   },
   historyItem: {
     flexDirection: 'row',
     justifyContent: 'space-between',
-    padding: 15, // Increased padding for better spacing
+    padding: 15, 
     backgroundColor: '#f1f1f1',
     borderRadius: 10,
     marginBottom: 10,
-    shadowColor: '#000', // Add shadow for depth
+    shadowColor: '#000', 
     shadowOffset: { width: 0, height: 1 },
     shadowOpacity: 0.2,
     shadowRadius: 2,
-    elevation: 3, // Elevation for Android
+    elevation: 3,
   },
   date: {
     fontSize: 16,
     color: Colors.light.text,
-    fontWeight: '500', // Slightly bolder text
+    fontWeight: '500',
   },
   exhaleSeconds: {
     fontSize: 16,
     color: Colors.light.tint,
-    fontWeight: '500', // Slightly bolder text
+    fontWeight: '500', 
   },
   noDataText: {
     textAlign: 'center',
     fontSize: 16,
     color: Colors.light.text,
-    marginTop: 20, // Add margin to separate from title
+    marginTop: 20, 
   },
   listContainer: {
-    paddingBottom: 20, // Add padding to the bottom of the list
+    paddingBottom: 20, 
   },
   buttonContainer: {
-    marginTop: 20, // Add some space above the buttons
+    marginTop: 20, 
     flexDirection: 'row',
-    justifyContent: 'space-around', // Space out the buttons
+    justifyContent: 'space-around', 
   },
 });
 

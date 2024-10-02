@@ -48,7 +48,7 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: 'rgba(0, 0, 0, 0.1)', // Semi-transparent background
+    backgroundColor: 'rgba(0, 0, 0, 0.1)',
     position: 'absolute',
     top: 0,
     left: 0,
@@ -57,11 +57,11 @@ const styles = StyleSheet.create({
   },
   card: {
     width: '80%',
-    backgroundColor: Colors.light.background, // Use light background color
+    backgroundColor: Colors.light.background,
     borderRadius: 10,
     padding: 20,
-    elevation: 10, // Android shadow
-    shadowColor: '#000', // iOS shadow
+    elevation: 10,
+    shadowColor: '#000',
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.3,
     shadowRadius: 4,
@@ -79,7 +79,7 @@ const styles = StyleSheet.create({
   },
   nextButton: {
     padding: 15,
-    backgroundColor: Colors.light.tint, // Use the constant color for the button
+    backgroundColor: Colors.light.tint, 
     borderRadius: 5,
     marginTop: 20,
   },

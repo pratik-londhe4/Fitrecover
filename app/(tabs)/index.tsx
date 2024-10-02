@@ -1,10 +1,11 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { View, Text, TouchableOpacity, StyleSheet, Animated } from 'react-native';
 import InhaleExhale from '../../components/InhaleExhale';
 import SiteLogo from '../../components/SiteLogo';
 import InfoCards from '../../components/InfoCards';
 import { Colors } from '../../constants/Colors';
 import { saveExhaleData } from '@/utils/ExhaleStorage';
+import { useFocusEffect } from '@react-navigation/native'; 
 
 const App: React.FC = () => {
   const [countdown, setCountdown] = useState<number | null>(null);
@@ -13,6 +14,21 @@ const App: React.FC = () => {
   const [feedback, setFeedback] = useState<{ message: string; status: string } | null>(null);
   const [showInfoCards, setShowInfoCards] = useState(true);
   const [fadeAnim] = useState(new Animated.Value(0)); // Animation state
+
+  // Use useFocusEffect to reset the state when the screen is focused
+  useFocusEffect(
+    useCallback(() => {
+      resetInhaleExhaleState();
+    }, [])
+  );
+
+  const resetInhaleExhaleState = () => {
+    setCountdown(null); // Reset countdown
+    setIsInhaleExhale(false); // Reset inhale/exhale state
+    setExhalationDuration(null); // Reset exhalation duration
+    setFeedback(null); // Reset feedback
+    setShowInfoCards(true); // Show info cards again
+  };
 
   const handleStart = () => {
     setCountdown(3);
@@ -43,7 +59,7 @@ const App: React.FC = () => {
       let status: string;
       if (duration < 30) {
         feedbackMessage = 'Not Fully Recovered';
-        status = Colors.light.tabIconDefault; // Soft gray instead of red
+        status = Colors.light.tabIconDefault; 
       } else if (duration >= 30 && duration < 60) {
         feedbackMessage = 'Recovered Adequately';
         status = '#60a662'; 
@@ -68,7 +84,7 @@ const App: React.FC = () => {
     Animated.timing(fadeAnim, {
       toValue: 1,
       duration: 500,
-      useNativeDriver: true, // Use native driver for performance
+      useNativeDriver: true, 
     }).start();
   };
 
@@ -87,10 +103,10 @@ const App: React.FC = () => {
         ) : isInhaleExhale ? (
           <InhaleExhale onComplete={handleComplete} />
         ) : countdown !== null ? (
-			<View style={styles.centeredContent}>
-          <Text style={styles.countdownText}>{countdown}</Text>
-		  <Text>Stay Still</Text>
-		  </View>
+          <View style={styles.centeredContent}>
+            <Text style={styles.countdownText}>{countdown}</Text>
+            <Text>Stay Still</Text>
+          </View>
         ) : (
           <TouchableOpacity style={styles.startButton} onPress={handleStart}>
             <Text style={styles.startButtonText}>Tap here to Start</Text>

@@ -12,7 +12,7 @@ const InhaleExhale: React.FC<{ onComplete: (exhalationDuration: number | null) =
 
   useEffect(() => {
     if (sequenceCount < 5) {
-      const inhaleDuration = (sequenceCount === 4) ? 7000 : 5000; // 7 seconds for the 5th inhale, 5 seconds for others
+      const inhaleDuration = (sequenceCount === 5 ) ? 7000 : 5000; // 7 seconds for the 5th inhale, 5 seconds for others
 
       const animateInhale = () => {
         Animated.timing(scaleValue, {
@@ -118,7 +118,7 @@ const styles = StyleSheet.create({
     width: 200,
     height: 200,
     borderRadius: 100,
-    backgroundColor: Colors.light.tint, // Use the constant color
+    backgroundColor: Colors.light.tint,
     marginBottom: 20,
     shadowColor: '#000',
     shadowOffset: {
@@ -127,7 +127,7 @@ const styles = StyleSheet.create({
     },
     shadowOpacity: 0.5,
     shadowRadius: 4,
-    elevation: 5, // For Android
+    elevation: 5, 
   },
   instructionText: {
     fontSize: 24,
@@ -136,7 +136,7 @@ const styles = StyleSheet.create({
   startButton: {
     marginTop: 20,
     padding: 10,
-    backgroundColor: Colors.light.tint, // Use the constant color
+    backgroundColor: Colors.light.tint, 
     borderRadius: 5,
   },
   startButtonText: {
