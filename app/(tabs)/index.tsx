@@ -2,9 +2,12 @@ import React, { useState, useEffect } from 'react';
 import { View, Text, TouchableOpacity, StyleSheet, Image } from 'react-native';
 import InhaleExhale from '../../components/InhaleExhale'; // Import the new component
 
+
 const App: React.FC = () => {
   const [countdown, setCountdown] = useState<number | null>(null);
   const [isInhaleExhale, setIsInhaleExhale] = useState(false);
+  const [exhalationDuration, setExhalationDuration] = useState<number | null>(null);
+
 
   const handleStart = () => {
     setCountdown(3);
@@ -26,10 +29,23 @@ const App: React.FC = () => {
   }, [countdown]);
 
   const handleComplete = () => {
-    // Handle the completion of the inhale/exhale animation
-    setIsInhaleExhale(false);
-    // Navigate to the next step or show recovery feedback
-    alert('Inhale/Exhale sequence completed!'); // Placeholder
+	setIsInhaleExhale(false);
+    // Calculate recovery feedback based on exhalation duration
+    if (exhalationDuration !== null) {
+      let feedback: string;
+      if (exhalationDuration < 25) {
+        feedback = 'No Recovery';
+      } else if (exhalationDuration >= 30 && exhalationDuration < 60) {
+        feedback = 'Recovered ~80-90%';
+      } else if (exhalationDuration >= 65 && exhalationDuration <= 120) {
+        feedback = 'Full Recovery 100%';
+      } else {
+        feedback = 'Duration out of range';
+      }
+      alert(`Exhalation Duration: ${exhalationDuration} seconds. ${feedback}`);
+    } else {
+      alert('Inhale/Exhale sequence completed!');
+    }
   };
 
   return (

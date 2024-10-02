@@ -1,42 +1,77 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, StyleSheet, Animated } from 'react-native';
+import { View, Text, StyleSheet, Animated, TouchableOpacity } from 'react-native';
 
-const InhaleExhale: React.FC<{ onComplete: () => void }> = ({ onComplete }) => {
+const InhaleExhale: React.FC<{ onComplete: (exhalationDuration: number | null) => void }> = ({ onComplete }) => {
+  const [sequenceCount, setSequenceCount] = useState(0); // Track the number of sequences completed
   const [isInhaling, setIsInhaling] = useState(true);
   const [scaleValue] = useState(new Animated.Value(0));
+  const [isFifthCycle, setIsFifthCycle] = useState(false);
+  const [exhalationStartTime, setExhalationStartTime] = useState<number | null>(null);
+  const [exhaleActive, setExhaleActive] = useState(false); // To track if exhale is active
 
   useEffect(() => {
-    const animate = () => {
-      Animated.sequence([
+    if (sequenceCount < 5) {
+      const inhaleDuration = (sequenceCount === 4) ? 7000 : 5000; // 7 seconds for the 5th inhale, 5 seconds for others
+
+      const animateInhale = () => {
         Animated.timing(scaleValue, {
           toValue: 1,
-          duration: 5000, // Inhale for 5 seconds
+          duration: inhaleDuration,
           useNativeDriver: true,
-        }),
+        }).start(() => {
+          setIsInhaling(false); // Prepare for exhale
+          animateExhale();
+        });
+      };
+
+      const animateExhale = () => {
         Animated.timing(scaleValue, {
           toValue: 0,
-          duration: 5000, // Exhale for 5 seconds
+          duration: 5000, // 5 seconds for exhale
           useNativeDriver: true,
-        }),
-      ]).start(() => {
-        // Toggle between inhaling and exhaling
-        setIsInhaling(prev => !prev);
-        if (isInhaling) {
-          // Repeat for inhale and exhale
-          animate();
-        } else {
-          // Complete the animation after the second exhale
-          onComplete();
-        }
-      });
-    };
+        }).start(() => {
+          setIsInhaling(true); // Prepare for next inhale
+          setSequenceCount(prev => prev + 1);
+        });
+      };
 
-    animate();
+      animateInhale(); // Start the inhale animation
+    } else {
+      // If it's the 5th inhale/exhale
+      setIsFifthCycle(true);
+      animateFifthCycle(); // Automatically start the 5th inhale
+    }
 
     return () => {
-      scaleValue.stopAnimation();
+      scaleValue.stopAnimation(); // Cleanup on unmount
     };
-  }, [isInhaling, scaleValue, onComplete]);
+  }, [sequenceCount]);
+
+  const animateFifthCycle = () => {
+    const inhaleDuration = 7000; // 7 seconds for the 5th inhale
+
+    Animated.timing(scaleValue, {
+      toValue: 1,
+      duration: inhaleDuration,
+      useNativeDriver: true,
+    }).start(() => {
+      // Mark the fifth cycle as active
+      setIsInhaling(true); // Keep inhaling state true for the fifth inhale
+    });
+  };
+
+  const handleExhaleStart = () => {
+    setExhalationStartTime(Date.now()); // Start timing for exhalation
+    setExhaleActive(true); // Set exhale to active
+  };
+
+  const handleExhaleEnd = () => {
+    if (exhalationStartTime) {
+      const exhalationDuration = (Date.now() - exhalationStartTime) / 1000; // Calculate exhalation duration
+      onComplete(exhalationDuration); // Call the completion function with exhalation duration
+    }
+    setExhaleActive(false); // Reset exhaling state
+  };
 
   return (
     <View style={styles.container}>
@@ -49,8 +84,18 @@ const InhaleExhale: React.FC<{ onComplete: () => void }> = ({ onComplete }) => {
         ]}
       />
       <Text style={styles.instructionText}>
-        {isInhaling ? 'Inhale...' : 'Exhale...'}
+        {isFifthCycle ? (exhaleActive ? 'Click here once you can no longer exhale...' : 'Inhale as full as possible...') : (isInhaling ? 'Inhale...' : 'Exhale...')}
       </Text>
+      {isFifthCycle && !exhaleActive && (
+        <TouchableOpacity style={styles.startButton} onPress={handleExhaleStart}>
+          <Text style={styles.startButtonText}>Tap to start Exhaling</Text>
+        </TouchableOpacity>
+      )}
+      {exhaleActive && (
+        <TouchableOpacity style={styles.startButton} onPress={handleExhaleEnd}>
+          <Text style={styles.startButtonText}>Click here when you can’t exhale anymore</Text>
+        </TouchableOpacity>
+      )}
     </View>
   );
 };
@@ -71,6 +116,16 @@ const styles = StyleSheet.create({
   instructionText: {
     fontSize: 24,
     fontWeight: 'bold',
+  },
+  startButton: {
+    marginTop: 20,
+    padding: 10,
+    backgroundColor: '#007BFF',
+    borderRadius: 5,
+  },
+  startButtonText: {
+    color: '#FFFFFF',
+    fontSize: 18,
   },
 });
 
