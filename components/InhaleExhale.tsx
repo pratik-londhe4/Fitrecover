@@ -96,7 +96,7 @@ const InhaleExhale: React.FC<{ onComplete: (exhalationDuration: number | null) =
       </Text>
       {(isFifthCycle && !exhaleActive) ? (
         <TouchableOpacity style={styles.startButton} onPress={handleExhaleStart}>
-          <Text style={styles.startButtonText}>Tap to start Exhaling</Text>
+          <Text style={styles.startButtonText}>Tap when starting to Exhale</Text>
         </TouchableOpacity>
       ) : null}
       {exhaleActive ? (

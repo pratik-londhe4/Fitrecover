@@ -87,7 +87,10 @@ const App: React.FC = () => {
         ) : isInhaleExhale ? (
           <InhaleExhale onComplete={handleComplete} />
         ) : countdown !== null ? (
+			<View style={styles.centeredContent}>
           <Text style={styles.countdownText}>{countdown}</Text>
+		  <Text>Stay Still</Text>
+		  </View>
         ) : (
           <TouchableOpacity style={styles.startButton} onPress={handleStart}>
             <Text style={styles.startButtonText}>Tap here to Start</Text>
