@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { View, Text, StyleSheet, Animated, TouchableOpacity } from 'react-native';
+import { Colors } from '../constants/Colors'; 
 
 const InhaleExhale: React.FC<{ onComplete: (exhalationDuration: number | null) => void }> = ({ onComplete }) => {
   const [sequenceCount, setSequenceCount] = useState(0); // Track the number of sequences completed
@@ -62,15 +63,14 @@ const InhaleExhale: React.FC<{ onComplete: (exhalationDuration: number | null) =
 
   const handleExhaleStart = () => {
     setExhalationStartTime(Date.now()); // Start timing for exhalation
-	  setExhaleActive(true); // Set exhale to active
-	  Animated.timing(scaleValue, {
-		toValue: 0,
-		duration: 20000, // 5 seconds for exhale
-		useNativeDriver: true,
-	  }).start(() => {
-		setIsInhaling(false); // Prepare for next inhale
-		
-	  });
+    setExhaleActive(true); // Set exhale to active
+    Animated.timing(scaleValue, {
+      toValue: 0,
+      duration: 20000, // 5 seconds for exhale
+      useNativeDriver: true,
+    }).start(() => {
+      setIsInhaling(false); // Prepare for next inhale
+    });
   };
 
   const handleExhaleEnd = () => {
@@ -99,7 +99,7 @@ const InhaleExhale: React.FC<{ onComplete: (exhalationDuration: number | null) =
           <Text style={styles.startButtonText}>Tap to start Exhaling</Text>
         </TouchableOpacity>
       ) : null}
-      {exhaleActive ?  (
+      {exhaleActive ? (
         <TouchableOpacity style={styles.startButton} onPress={handleExhaleEnd}>
           <Text style={styles.startButtonText}>Click here when you can not exhale anymore</Text>
         </TouchableOpacity>
@@ -118,8 +118,16 @@ const styles = StyleSheet.create({
     width: 200,
     height: 200,
     borderRadius: 100,
-    backgroundColor: '#007BFF',
+    backgroundColor: Colors.light.tint, // Use the constant color
     marginBottom: 20,
+    shadowColor: '#000',
+    shadowOffset: {
+      width: 2,
+      height: 2,
+    },
+    shadowOpacity: 0.5,
+    shadowRadius: 4,
+    elevation: 5, // For Android
   },
   instructionText: {
     fontSize: 24,
@@ -128,7 +136,7 @@ const styles = StyleSheet.create({
   startButton: {
     marginTop: 20,
     padding: 10,
-    backgroundColor: '#007BFF',
+    backgroundColor: Colors.light.tint, // Use the constant color
     borderRadius: 5,
   },
   startButtonText: {
